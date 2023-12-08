@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IAddress, IFullName, IUser } from './user.interface';
+import { IAddress, IFullName, IOrders, IUser } from './user.interface';
 
 const fullNameSchema = new Schema<IFullName>(
   {
@@ -31,6 +31,26 @@ const addressSchema = new Schema<IAddress>(
     },
   },
   { _id: false },
+);
+
+const odersSchema = new Schema<IOrders>(
+  {
+    productName: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
+  },
+  {
+    _id: false,
+  },
 );
 
 const userSchema = new Schema<IUser>({
@@ -75,6 +95,11 @@ const userSchema = new Schema<IUser>({
     type: addressSchema,
     required: true,
   },
+  orders: [
+    {
+      type: odersSchema,
+    },
+  ],
 });
 
 export const User = model<IUser>('User', userSchema);
