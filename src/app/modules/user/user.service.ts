@@ -7,11 +7,20 @@ const createUserIntoDB = async (user: IUser) => {
 };
 
 const getAllUsersFromDB = async () => {
-  const result = await User.find()
+  const filter = {};
+  const projection = { username: 1, fullName: 1, age: 1, email: 1, address: 1 };
+
+  const result = await User.find(filter, projection);
   return result;
-}
+};
+
+const getSingleUserFromDB = async (userId: number) => {
+  const result = await User.findOne({ userId });
+  return result;
+};
 
 export const UserServices = {
   createUserIntoDB,
-  getAllUsersFromDB
+  getAllUsersFromDB,
+  getSingleUserFromDB,
 };
