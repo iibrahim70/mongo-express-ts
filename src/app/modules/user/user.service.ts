@@ -19,20 +19,30 @@ const getAllUsersFromDB = async () => {
 };
 
 const getSingleUserFromDB = async (userId: number) => {
-  const isUserExists = await User.isUserExists(userId);
-  if (!isUserExists) {
-    throw new Error('User Not Found');
+  const userData = await User.isUserExists(userId);
+  if (!userData) {
+    throw new Error('User not found');
   }
-  return isUserExists;
+  return userData;
 };
 
 const updateUserFromDB = async (userId: number, user: Partial<IUser>) => {
   const isUserExists = await User.isUserExists(userId);
   if (!isUserExists) {
-    throw new Error('User Not Found');
+    throw new Error('User not found!');
   }
 
   const result = await User.findOneAndUpdate({ userId }, user, { new: true });
+  return result;
+};
+
+const deleteUserFromDB = async (userId: number) => {
+  const isUserExists = await User.isUserExists(userId);
+  if (!isUserExists) {
+    throw new Error('User not found!');
+  }
+
+  const result = await User.findOneAndDelete({ userId }, { new: true });
   return result;
 };
 
@@ -41,4 +51,5 @@ export const UserServices = {
   getAllUsersFromDB,
   getSingleUserFromDB,
   updateUserFromDB,
+  deleteUserFromDB,
 };

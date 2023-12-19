@@ -18,6 +18,7 @@ const createUserIntoDB = (user) => __awaiter(void 0, void 0, void 0, function* (
 const getAllUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.User.find().select({
         username: 1,
+        userId: 1,
         fullName: 1,
         age: 1,
         email: 1,
@@ -26,14 +27,32 @@ const getAllUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = yield user_model_1.User.isUserExists(userId);
+    if (!userData) {
+        throw new Error('User not found');
+    }
+    return userData;
+});
+const updateUserFromDB = (userId, user) => __awaiter(void 0, void 0, void 0, function* () {
     const isUserExists = yield user_model_1.User.isUserExists(userId);
     if (!isUserExists) {
-        throw new Error('User Not Found');
+        throw new Error('User not found!');
     }
-    return isUserExists;
+    const result = yield user_model_1.User.findOneAndUpdate({ userId }, user, { new: true });
+    return result;
+});
+const deleteUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUserExists = yield user_model_1.User.isUserExists(userId);
+    if (!isUserExists) {
+        throw new Error('User not found!');
+    }
+    const result = yield user_model_1.User.findOneAndDelete({ userId }, { new: true });
+    return result;
 });
 exports.UserServices = {
     createUserIntoDB,
     getAllUsersFromDB,
     getSingleUserFromDB,
+    updateUserFromDB,
+    deleteUserFromDB,
 };
