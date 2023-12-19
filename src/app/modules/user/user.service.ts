@@ -9,6 +9,7 @@ const createUserIntoDB = async (user: IUser) => {
 const getAllUsersFromDB = async () => {
   const result = await User.find().select({
     username: 1,
+    userId: 1,
     fullName: 1,
     age: 1,
     email: 1,
@@ -25,8 +26,19 @@ const getSingleUserFromDB = async (userId: number) => {
   return isUserExists;
 };
 
+const updateUserFromDB = async (userId: number, user: Partial<IUser>) => {
+  const isUserExists = await User.isUserExists(userId);
+  if (!isUserExists) {
+    throw new Error('User Not Found');
+  }
+
+  const result = await User.findOneAndUpdate({ userId }, user, { new: true });
+  return result;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
+  updateUserFromDB,
 };
