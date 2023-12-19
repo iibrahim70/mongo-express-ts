@@ -10,4 +10,6 @@ const router = express_1.default.Router();
 router.post('/', user_controller_1.UserControllers.createUser);
 router.get('/', user_controller_1.UserControllers.getAllUsers);
 router.get('/:userId', user_controller_1.UserControllers.getUserById);
+router.put('/:userId', user_controller_1.UserControllers.updateUserById);
+router.delete('/:userId', user_controller_1.UserControllers.deleteUserById);
 exports.UserRouter = router;
