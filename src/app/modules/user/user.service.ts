@@ -7,16 +7,22 @@ const createUserIntoDB = async (user: IUser) => {
 };
 
 const getAllUsersFromDB = async () => {
-  const filter = {};
-  const projection = { username: 1, fullName: 1, age: 1, email: 1, address: 1 };
-
-  const result = await User.find(filter, projection);
+  const result = await User.find().select({
+    username: 1,
+    fullName: 1,
+    age: 1,
+    email: 1,
+    address: 1,
+  });
   return result;
 };
 
 const getSingleUserFromDB = async (userId: number) => {
-  const result = await User.findOne({ userId });
-  return result;
+  const isUserExists = await User.isUserExists(userId);
+  if (!isUserExists) {
+    throw new Error('User Not Found');
+  }
+  return isUserExists;
 };
 
 export const UserServices = {
