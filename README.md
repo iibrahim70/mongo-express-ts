@@ -15,7 +15,7 @@ The application follows a modular architecture to enhance maintainability and sc
   - Retrieve a specific user by ID.
   - Modular pattern for controllers, models, routes, middleware, and validations.
 
-- **Order Management (Bonus):**
+- **Order Management:**
   - Add new products to user orders.
   - Retrieve all orders for a specific user.
   - Calculate the total price of orders for a user.
