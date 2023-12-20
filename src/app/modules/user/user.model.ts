@@ -6,6 +6,8 @@ import {
   IUser,
   UserModel,
 } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 const fullNameSchema = new Schema<IFullName>(
   {
@@ -106,6 +108,24 @@ const userSchema = new Schema<IUser, UserModel>({
     },
   ],
 });
+
+// pre save middleware
+userSchema.pre('save', async function (next) {
+  // hasing password and save into db
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcryptSaltRounds),
+  );
+  next();
+});
+
+// deleting password field
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+
+  delete userObject.password;
+  return userObject;
+};
 
 // creating a custom static method
 userSchema.statics.isUserExists = async function (userId: number) {
