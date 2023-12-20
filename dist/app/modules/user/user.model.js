@@ -8,9 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const config_1 = __importDefault(require("../../config"));
 const fullNameSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
@@ -98,6 +103,20 @@ const userSchema = new mongoose_1.Schema({
         },
     ],
 });
+// pre save middleware
+userSchema.pre('save', function (next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // hasing password and save into db
+        this.password = yield bcrypt_1.default.hash(this.password, Number(config_1.default.bcryptSaltRounds));
+        next();
+    });
+});
+// deleting password field
+userSchema.methods.toJSON = function () {
+    const userObject = this.toObject();
+    delete userObject.password;
+    return userObject;
+};
 // creating a custom static method
 userSchema.statics.isUserExists = function (userId) {
     return __awaiter(this, void 0, void 0, function* () {
